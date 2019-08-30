@@ -4,6 +4,11 @@
 // We need to get the required https module first
 const https = require('https');
 
+// Print Error Messages
+function printError(error) {
+  console.error(error.message);
+}
+
 // Function to print message to console
 function printMessage(username, badgeCount, points) {
     const message = `${username} has ${badgeCount} total badge(s) and ${points} points in JavaScript`;
@@ -12,6 +17,8 @@ function printMessage(username, badgeCount, points) {
 
 
 function getProfile(username) {
+  // using try-catch for easy to understand error messages
+  try {
     // Connect to the API URL (https://teamtreehouse.com/username.json)
     const request = https.get(`https://teamtreehouse.com/${username}.json`, response => {
 
@@ -23,6 +30,8 @@ function getProfile(username) {
         });
 
         response.on('end', () => {
+          // this try-catch will catch invalid user names
+          try {
             // Parse the data
             // Store the object as a constant variable called profile
             const profile = JSON.parse(body);
@@ -33,10 +42,16 @@ function getProfile(username) {
             // Print the data
             printMessage(username, profile.badges.length,
                 profile.points.JavaScript);
+            } catch (error) {
+              console.error('Problem with request. User does not exist');
+            }
         });
     });
 
-    request.on('error', error => console.error(`Problem with request: ${error.message}`));
+    request.on('error', printError);
+  } catch (error) {
+    printError(error);
+  }
 }
 
 const users = process.argv.slice(2);
