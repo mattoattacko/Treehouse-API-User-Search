@@ -25,9 +25,14 @@ const request = https.get(`https://teamtreehouse.com/${username}.json`, response
 
   response.on('end', () => {
     // Parse the data
+    // Store the object as a constant variable called profile
+    const profile = JSON.parse(body);
+    // We can use the dir output to figure out how many badges and points we have 
+    // console.dir(profile);
 
-    console.log(body);
+    // we have a badges array, so we can print a message to show our badge count. There is a points object segmented into topic areas. 
     // Print the data
+    printMessage(username,profile.badges.length, profile.points.JavaScript);
   });
 
 
