@@ -12,7 +12,7 @@ function printMessage(username, badgeCount, points) {
 
 
 function getProfile(username) {
-  
+
 	// Connect to the API URL (https://teamtreehouse.com/username.json)
 	const request = https.get(`https://teamtreehouse.com/${username}.json`, response => {
 
@@ -38,8 +38,11 @@ function getProfile(username) {
 			// Print the data
 			printMessage(username, profile.badges.length, profile.points.JavaScript);
 		});
+
 	});
+
 }
+
 // Non-blocking https response cycle will allow whichever profile with the least amount of information in it to be returned first. This will not work in other languages since we are streaming in data and dealing with it when we can. 
 // getProfile("chalkers");
 // getProfile("matthewmcquain");
