@@ -4,6 +4,9 @@
 // We need to get the required https module first
 const https = require('https');
 
+// Requre http module for status codes
+const http = require('http');
+
 // Print Error Messages
 function printError(error) {
   console.error(error.message);
@@ -21,6 +24,8 @@ function getProfile(username) {
   try {
     // Connect to the API URL (https://teamtreehouse.com/username.json)
     const request = https.get(`https://teamtreehouse.com/${username}.json`, response => {
+      // we check the http status code for 200 - OK  
+      if (response.statusCode === 200) { 
 
         let body = "";
 
@@ -46,6 +51,14 @@ function getProfile(username) {
               console.error('Problem with request. User does not exist');
             }
         });
+
+      // if there is a different http status code, it will be thrown here.
+      // the http.status_codes template literal in const message allows the user to see what type of http status code error they are getting rather than just getting a number. 
+      } else {
+          const message = `There was an error getting the profile for ${username} (${http.STATUS_CODES[response.statusCode]})`;
+          const statusCodeError = new Error (message);
+          printError(statusCodeError);
+      }
     });
 
     request.on('error', printError);
